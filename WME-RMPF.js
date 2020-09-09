@@ -2,7 +2,7 @@
 // @name            WME Reload Map Position Fix
 // @namespace       https://greasyfork.org/users/166843
 // @description     Keeps track of the current map center and zoom and restores it upon reloading.
-// @version         2020.09.08.01
+// @version         2020.09.09.01
 // @author          dBsooner
 // @grant           none
 // @require         https://greasyfork.org/scripts/24851-wazewrap/code/WazeWrap.js
@@ -12,6 +12,11 @@
 // ==/UserScript==
 
 /* global window, localStorage, sessionStorage, W, $, OpenLayers */
+
+/* Changelog:                                                                           *
+ *  2020.09.08.01: Initial release.                                                     *
+ *  2020.09.09.01: Check for URL parameters.                                            *
+ *                                                                                      */
 
 const SETTINGS_STORE_NAME = 'WME_RMPF';
 
@@ -28,8 +33,9 @@ function init() {
         savedCenter = (loadedSettings) ? loadedSettings.savedCenter : W.map.getCenter(),
         savedZoom = (loadedSettings) ? loadedSettings.savedZoom : W.map.getZoom(),
         currCenter = W.map.getCenter(),
-        currZoom = W.map.getZoom();
-    if ((currCenter.lon !== savedCenter.lon) || (currCenter.lat !== savedCenter.lat) || (savedZoom !== currZoom))
+        currZoom = W.map.getZoom(),
+        urlParams = new URLSearchParams(window.location.search);
+    if (!urlParams.get('lon') && !urlParams.get('lat') && !urlParams.get('zoom') && ((currCenter.lon !== savedCenter.lon) || (currCenter.lat !== savedCenter.lat) || (savedZoom !== currZoom)))
         W.map.getOLMap().moveTo(new OpenLayers.LonLat([savedCenter.lon, savedCenter.lat], savedZoom));
     W.map.events.register('zoomend', null, updatedSavedMapPosition);
     W.map.events.register('moveend', null, updatedSavedMapPosition);
