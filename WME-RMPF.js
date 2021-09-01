@@ -2,7 +2,7 @@
 // @name            WME Reload Map Position Fix
 // @namespace       https://greasyfork.org/users/166843
 // @description     Keeps track of the current map center and zoom and restores it upon reloading.
-// @version         2020.09.09.01
+// @version         2021.09.01.01
 // @author          dBsooner
 // @grant           none
 // @require         https://greasyfork.org/scripts/24851-wazewrap/code/WazeWrap.js
@@ -11,11 +11,12 @@
 // @contributionURL https://github.com/WazeDev/Thank-The-Authors
 // ==/UserScript==
 
-/* global window, localStorage, sessionStorage, W, $, OpenLayers */
+/* global window, localStorage, sessionStorage, W, $, OpenLayers, WazeWrap */
 
 /* Changelog:                                                                           *
  *  2020.09.08.01: Initial release.                                                     *
  *  2020.09.09.01: Check for URL parameters.                                            *
+ *  2021.09.01.01: Update to latest WME zoom level changes.                             *
  *                                                                                      */
 
 const SETTINGS_STORE_NAME = 'WME_RMPF';
@@ -35,21 +36,21 @@ function init() {
         currCenter = W.map.getCenter(),
         currZoom = W.map.getZoom(),
         urlParams = new URLSearchParams(window.location.search);
-    if (!urlParams.get('lon') && !urlParams.get('lat') && !urlParams.get('zoom') && ((currCenter.lon !== savedCenter.lon) || (currCenter.lat !== savedCenter.lat) || (savedZoom !== currZoom)))
-        W.map.getOLMap().moveTo(new OpenLayers.LonLat([savedCenter.lon, savedCenter.lat], savedZoom));
+    if (!urlParams.get('lon') && !urlParams.get('lat') && !urlParams.get('zoomLevel') && ((currCenter.lon !== savedCenter.lon) || (currCenter.lat !== savedCenter.lat) || (savedZoom !== currZoom)))
+        W.map.getOLMap().moveTo(new OpenLayers.LonLat([savedCenter.lon, savedCenter.lat]), savedZoom);
     W.map.events.register('zoomend', null, updatedSavedMapPosition);
     W.map.events.register('moveend', null, updatedSavedMapPosition);
     window.addEventListener('beforeunload', updatedSavedMapPosition, false);
 }
 
 function bootstrap(tries) {
-    if (W && W.map && $) {
+    if (W && W.map && $ && WazeWrap.Ready) {
         window.clearTimeout(_bootstrapTimeout);
         _bootstrapTimeout = undefined;
         init();
     }
     else if (tries < 1000) {
-        console.log(`RMPF: Bootstrap failed. Retrying ${tries} of 1000`);
+        console.log(`RMPF: WME not ready. Retrying ${tries} of 1000`);
         _bootstrapTimeout = window.setTimeout(bootstrap, 200, ++tries);
     }
     else {
