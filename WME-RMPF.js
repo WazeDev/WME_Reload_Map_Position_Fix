@@ -17,7 +17,7 @@
  *  2020.09.08.01: Initial release.                                                     *
  *  2020.09.09.01: Check for URL parameters.                                            *
  *  2021.09.01.01: Update to latest WME zoom level changes.                             *
- *  2023.03.07.01: New bootstrap routine.                                               *
+ *  2023.03.15.01: New bootstrap routine.                                               *
  *                 Code structure with new linter options.                              *
  *                 Change @include to @match with @exclude in userscript headers.       *
  *                                                                                      */
