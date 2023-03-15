@@ -2,12 +2,12 @@
 // @name            WME Reload Map Position Fix
 // @namespace       https://greasyfork.org/users/166843
 // @description     Keeps track of the current map center and zoom and restores it upon reloading.
-// @version         2023.03.07.01
+// @version         2023.03.15.01
 // @author          dBsooner
 // @grant           none
-// @require         https://greasyfork.org/scripts/24851-wazewrap/code/WazeWrap.js
 // @license         GPLv3
-// @include         /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
+// @match           http*://*.waze.com/*editor*
+// @exclude         http*://*.waze.com/user/editor*
 // @contributionURL https://github.com/WazeDev/Thank-The-Authors
 // ==/UserScript==
 
@@ -17,7 +17,9 @@
  *  2020.09.08.01: Initial release.                                                     *
  *  2020.09.09.01: Check for URL parameters.                                            *
  *  2021.09.01.01: Update to latest WME zoom level changes.                             *
- *  2023.03.07.01: New bootstrap routine. Code structure with new linter options.       *
+ *  2023.03.07.01: New bootstrap routine.                                               *
+ *                 Code structure with new linter options.                              *
+ *                 Change @include to @match with @exclude in userscript headers.       *
  *                                                                                      */
 
 (function () {
